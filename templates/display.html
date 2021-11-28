@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+            
+        });
+    </script>
+    <style>
+        label {
+            color: white;
+        }
+
+        .page_link{
+            background-color: #3e444a;
+        }
+
+        .page-item.active .page-link {
+            z-index: 3;
+            color: #fff;
+            background-color: #45596e;
+            border-color: white;
+        }
+    </style>
+</head>
+<body style="background: #272c30;">
+    <a href="javascript:window.history.go(-1)">Back</a> <!-- Displayed on top of a potentially large JSON response, so it will remain visible -->
+    <center><h1 style="color: white;">Personal Access Tokens</h1></center>
+    <center>
+        <div style="max-width: 66%">
+            <table id="dataTable" class="table table-striped table-bordered table-hover table-condensed table-dark" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>DisplayName</th>
+                        <th>Owner</th>
+                        <th>isValid</th>
+                        <th>validFrom</th>
+                        <th>validTo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for personalAccessToken in personalAccessTokens %}
+                        <tr>
+                            <td style="width: 20%">{{ personalAccessToken.displayName }}</td>
+                            <td style="width: 20%">{{ personalAccessToken.owner }}</td>
+                            <td style="width: 20%">{{ personalAccessToken.isValid }}</td>
+                            <td style="width: 20%">{{ personalAccessToken.validFrom }}</td>
+                            <td style="width: 20%">{{ personalAccessToken.validTo }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </center>
+</body>
+</html>
