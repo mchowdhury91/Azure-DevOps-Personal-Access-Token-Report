@@ -4,31 +4,21 @@ languages:
 - python
 products:
 - azure-active-directory
-description: "This sample demonstrates a Python web application calling a Microsoft Graph that is secured using Azure Active Directory."
-urlFragment: ms-identity-python-webapp
+description: "This is an edit of the Microsoft QuickStart application for Azure AD made in Python and Flask. It uses the Client ID and Client Secret from an Azure AD registered application along with an interactive login from a member of that Azure AD tenant to generate a report of all active Personal Access Tokens of a given Azure DevOps organization. The report is visible in browser, and in an Excel file that is generated in the root directory of the application. It takes a few minutes to generate depending on how many users you have in your Azure DevOps organization. This app does not account for continuationToken availability (which occurs if there are too many users or too many tokens registered to a given user). If you have a large number of users or tokens, the logic in app.py must be updated to look for a continuation token on the user list call and the token list call to make the REST call again with the continuationToken."
 ---
-# Integrating Microsoft Identity Platform with a Python web application
-
-## About this sample
-
-> This sample is also available as a quickstart for the Microsoft identity platform:
-[Quickstart: Add sign-in with Microsoft to a Python web app]("https://docs.microsoft.com/azure/active-directory/develop/quickstart-v2-python-webapp")
 
 ### Overview
 
-This sample demonstrates a Python web application that signs-in users with the Microsoft identity platform and calls the Microsoft Graph.
+This sample demonstrates a Python web application that signs-in users with the Microsoft identity platform and calls the [PAT lifecycle management API for Azure DevOps]("https://docs.microsoft.com/en-us/rest/api/azure/devops/tokens/pats?view=azure-devops-rest-6.1")
 
 1. The python web application uses the Microsoft Authentication Library (MSAL) to obtain a JWT access token from the Microsoft identity platform (formerly Azure AD v2.0):
-2. The access token is used as a bearer token to authenticate the user when calling the Microsoft Graph.
+2. The access token is used as a bearer token to authenticate the user when calling the Azure DevOps api.
 
 ![Overview](./ReadmeFiles/topology.png)
 
 ### Scenario
 
-This sample shows how to build a Python web app using Flask and MSAL Python,
-that signs in a user, and get access to Microsoft Graph.
-For more information about how the protocols work in this scenario and other scenarios,
-see [Authentication Scenarios for Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-scenarios).
+This is used in order to get a view of all active Personal Access Tokens for a given organization.
 
 ## How to run this sample
 
@@ -91,6 +81,8 @@ As a first step you'll need to:
 
 #### Register the Python Webapp (python-webapp)
 
+Use the steps below or visit [Manage personal access tokens (PATs) using REST API](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/manage-personal-access-tokens-via-api?view=azure-devops)
+
 1. Navigate to the Microsoft identity platform for developers [App registrations](https://go.microsoft.com/fwlink/?linkid=2083908) page.
 1. Select **New registration**.
 1. When the **Register an application page** appears, enter your application's registration information:
@@ -109,10 +101,7 @@ As a first step you'll need to:
      so record it as soon as it is visible from the Azure portal.
 1. Select the **API permissions** section
    - Click the **Add a permission** button and then,
-   - Ensure that the **Microsoft APIs** tab is selected
-   - In the *Commonly used Microsoft APIs* section, click on **Microsoft Graph**
-   - In the **Delegated permissions** section, ensure that the right permissions are checked: **User.ReadBasic.All**. Use the search box if necessary.
-   - Select the **Add permissions** button
+   - Select Add a permission and select Azure DevOps -> check user_impersonation -> select Add permissions.
 
 ### Step 3:  Configure the sample to use your Azure AD tenant
 
@@ -123,11 +112,8 @@ In the steps below, "ClientID" is the same as "Application ID" or "AppId".
 > Note: if you used the setup scripts, the changes below may have been applied for you
 
 1. Open the `app_config.py` file
-1. Find the app key `Enter_the_Tenant_Name_Here` and replace the existing value with your Azure AD tenant name.
-1. You saved your application secret during the creation of the `python-webapp` app in the Azure portal.
-   Now you can set the secret in environment variable `CLIENT_SECRET`,
-   and then adjust `app_config.py` to pick it up.
-1. Find the app key `Enter_the_Application_Id_here` and replace the existing value with the application ID (clientId) of the `python-webapp` application copied from the Azure portal.
+1. Fill in the ORGANIZATION variable
+2. Fill in the AAD_TENANT_ID variable: [How to find your tenant ID - Azure Active Directory](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-how-to-find-tenant)
 
 
 ### Step 4: Run the sample
@@ -137,27 +123,20 @@ In the steps below, "ClientID" is the same as "Application ID" or "AppId".
 $ pip install -r requirements.txt
 ```
 
+or
+```Shell
+# pip3 install -r requirements.txt
+```
+
 Run app.py from shell or command line. Note that the host and port values need to match what you've set up in your redirect_uri:
 
 ```Shell
-$ flask run --host localhost --port 5000
+$ python app.py
 ```
+### Step 5: Open localhost:5000 in a browser
 
-## Community Help and Support
-
-Use [Stack Overflow](http://stackoverflow.com/questions/tagged/msal) to get support from the community.
-Ask your questions on Stack Overflow first and browse existing issues to see if someone has asked your question before.
-Make sure that your questions or comments are tagged with [`azure-active-directory` `adal` `msal` `python`].
-
-If you find a bug in the sample, please raise the issue on [GitHub Issues](../../issues).
-
-To provide a recommendation, visit the following [User Voice page](https://feedback.azure.com/forums/169401-azure-active-directory).
-
-## Contributing
-
-If you'd like to contribute to this sample, see [CONTRIBUTING.MD](/CONTRIBUTING.md).
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information, see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+- Open a browser and navigate to localhost:5000
+- The report will start generating and populating the table. Once the table is finished populating, there will be an Excel file in the root directory of the app. You can also use the controls in the completed table on the webpage to filter or sort tokens.
 
 ## More information
 
